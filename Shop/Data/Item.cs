@@ -19,6 +19,10 @@ namespace Shop.Data
         [Display(Name = "واحد")]
         public string Unit { get; set; }
 
+        [Display(Name = "قیمت")]
+        [Range(0, double.MaxValue, ErrorMessage ="حداقل قیمت باید بزرگتر یا مساوی با صفر باشد")]
+        public double Price { get; set; }
+
         [Display(Name = "دسته بندی")]
         public int CategoryId { get; set; }
 

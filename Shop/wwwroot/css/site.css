@@ -12,6 +12,10 @@ body {
     padding-right: 15px;
 }
 
+th {
+    text-align : right;
+}
+
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
