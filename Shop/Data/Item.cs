@@ -20,6 +20,7 @@ namespace Shop.Data
         public string Unit { get; set; }
 
         [Display(Name = "قیمت")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N}")]
         [Range(0, double.MaxValue, ErrorMessage ="حداقل قیمت باید بزرگتر یا مساوی با صفر باشد")]
         public double Price { get; set; }
 

@@ -4,15 +4,36 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Data;
 using Shop.Models;
 
 namespace Shop.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        public IActionResult Index(string searchString)
+        {
+            if (_context.Items == null)
+            {
+                return BadRequest(" در پردازش اطلاعات خطایی رخ داده است");
+            }
+
+            var items = from m in _context.Items
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                items = items.Where(s => s.Title.Contains(searchString));
+            }
+
+            return View(items.ToList());
         }
 
         public IActionResult About()
