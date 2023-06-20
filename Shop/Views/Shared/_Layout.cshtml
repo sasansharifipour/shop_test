@@ -28,9 +28,10 @@
                 </button>
             </div>
             <div class="navbar-collapse collapse" >
-                <ul class="nav navbar-nav"  style="float:right!important;">
+                <ul class="nav navbar-nav" style="float:right!important;">
                     <li style="float:right!important;"><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
                     <li style="float:right!important;"><a asp-area="" asp-controller="Categories" asp-action="Index">دسته بندی ها</a></li>
+                    <li style="float:right!important;"><a asp-area="" asp-controller="Items" asp-action="Index">کالا ها</a></li>
                     <li style="float:right!important;"><a asp-area="" asp-controller="Home" asp-action="About">درباره ما</a></li>
                     <li style="float:right!important;"><a asp-area="" asp-controller="Home" asp-action="Contact">ارتباط با ما</a></li>
                 </ul>
@@ -42,18 +43,7 @@
     <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
-        <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                @RenderBody()
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                <button data-toggle="collapse" data-target="#demo">+</button>
-
-                <div id="demo" class="collapse">
-                    Lorem ipsum dolor text....
-                </div>
-            </div>
-        </div>
+        @RenderBody()
     </div>
 
     <environment include="Development">

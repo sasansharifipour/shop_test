@@ -6,10 +6,17 @@
 <p></p>
 <hr />
 <form asp-controller="Home" asp-action="Index">
-    <p>
-        عنوان محصول: <input class="text-info" type="text" name="searchString" />
-        <input class="btn btn-info" type="submit" value="جستجو" />
-    </p>
+        <div class="row">
+            <div class="col-lg-2 col-md-2" style="float:right;">عنوان محصول:</div>
+            <div class="col-lg-2 col-md-2" style="float:right;"><input class="text-info" type="text" name="searchString" /></div>
+            <div class="col-lg-2 col-md-2"  style="float:right;">دسته محصول:</div>
+            <div class="col-lg-2 col-md-2" style="float:right;">
+                <select name="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                    <option disabled selected>---انتخاب کنید---</option>
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-4" style="float:right;"><input class="btn btn-info" type="submit" value="جستجو" /></div>
+        </div>
 </form>
 
 <table class="table table-striped">

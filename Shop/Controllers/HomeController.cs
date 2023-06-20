@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Shop.Data;
 using Shop.Models;
 
@@ -18,8 +19,10 @@ namespace Shop.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string searchString, int? CategoryId=null)
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "FullTitle");
+
             if (_context.Items == null)
             {
                 return BadRequest(" در پردازش اطلاعات خطایی رخ داده است");
@@ -31,6 +34,11 @@ namespace Shop.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 items = items.Where(s => s.Title.Contains(searchString));
+            }
+
+            if (CategoryId != null)
+            {
+                items = items.Where(s => s.CategoryId == CategoryId);
             }
 
             return View(items.ToList());
