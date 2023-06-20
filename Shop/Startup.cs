@@ -37,10 +37,51 @@ namespace Shop
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedEmail = false;
+                    options.SignIn.RequireConfirmedPhoneNumber = false;
+                }
+            )
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        private async Task CreateRoles(IServiceScope scope)
+        {
+            //initializing custom roles 
+            var RoleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            string[] roleNames = { "Admin", "Member" };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            var poweruser = new IdentityUser
+            {
+                Email = "admin@mail.com",
+            };
+
+            string userPWD = "12345678";
+            var _user = await UserManager.FindByEmailAsync(poweruser.Email);
+
+            if (_user == null)
+            {
+                var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
+                if (createPowerUser.Succeeded)
+                {
+                    await UserManager.AddToRoleAsync(poweruser, "Admin");
+                }
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +110,10 @@ namespace Shop
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            var serviceProvider = app.ApplicationServices.CreateScope();
+
+            CreateRoles(serviceProvider).Wait();
         }
     }
 }
