@@ -26,7 +26,7 @@ namespace Shop.Controllers
         // GET: Purchases
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Purchases.Include(p => p.Item);
+            var applicationDbContext = _context.Purchases.Include(p => p.Item).Include(s => s.Owner);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -90,6 +90,9 @@ namespace Shop.Controllers
         {
             if (ModelState.IsValid)
             {
+                var logined_username = HttpContext.User.Identity.Name;
+                var user = _userManager.FindByNameAsync(logined_username).Result;
+                purchase.OwnerId = user.Id;
                 _context.Add(purchase);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
