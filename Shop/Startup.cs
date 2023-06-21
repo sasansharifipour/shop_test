@@ -69,6 +69,7 @@ namespace Shop
             var poweruser = new IdentityUser
             {
                 Email = "admin@mail.com",
+                UserName = "admin@mail.com"
             };
 
             string userPWD = "12345678";

@@ -36,15 +36,17 @@ namespace Shop.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage ="لطفاً ایمیل را وارد کنید")]
+            [EmailAddress(ErrorMessage ="ایمیل وارد شده معتبر نمی باشد")]
+            [Display(Name = "ایمیل")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "لطفاً رمز عبور را وارد کنید")]
             [DataType(DataType.Password)]
+            [Display(Name = "رمز عبور")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "مرا به خاطر بسپار")]
             public bool RememberMe { get; set; }
         }
 

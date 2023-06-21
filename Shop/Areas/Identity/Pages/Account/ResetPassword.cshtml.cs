@@ -25,18 +25,19 @@ namespace Shop.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+
+            [Required(ErrorMessage = "لطفاً ایمیل را وارد کنید")]
+            [EmailAddress(ErrorMessage = "ایمیل وارد شده معتبر نمی باشد")]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "لطفاً رمز عبور را وارد کنید")]
+            [StringLength(100, ErrorMessage = "{0} حداقل {2} و حداکثر {1} کارکتر باشد", MinimumLength = 6)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "تکرار رمز عبور")]
+            [Compare("Password", ErrorMessage = "رمز عبور و تکرار آن برابر نیستند")]
             public string ConfirmPassword { get; set; }
 
             public string Code { get; set; }
