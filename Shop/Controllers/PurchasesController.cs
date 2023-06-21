@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,13 +11,16 @@ using Shop.Data;
 
 namespace Shop.Controllers
 {
+    [Authorize]
     public class PurchasesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public PurchasesController(ApplicationDbContext context)
+        public PurchasesController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Purchases
@@ -45,13 +50,35 @@ namespace Shop.Controllers
         }
 
         // GET: Purchases/Create
-        public IActionResult Create()
+        public IActionResult Create(int? itemId)
         {
             var purchaseStatus = (from PurchaseStatus d in Enum.GetValues(typeof(PurchaseStatus))
                              select new { Id = (int)d, Name = d.ToString() }).ToList();
+            
             ViewData["ItemId"] = new SelectList(_context.Items, "Id", "Title");
             ViewData["PurchaseStatus"] = new SelectList(purchaseStatus, "Id", "Name");
-            return View();
+
+            var item = _context.Items.FirstOrDefault(s => s.Id == itemId);
+
+            if (item == null || item.Id <= 0)
+            {
+                ModelState.AddModelError("ItemNotFound", "کالایی یافت نشد.");
+                return View();
+            }
+
+            var logined_username = HttpContext.User.Identity.Name;
+            var user = _userManager.FindByNameAsync(logined_username).Result;
+
+            Purchase purchase = new Purchase()
+            {
+                ItemId = item.Id,
+                Count = 1,
+                OwnerId = user.Id,
+                Price = item.Price,
+                Status = PurchaseStatus.ثبت
+            };
+
+            return View(purchase);
         }
 
         // POST: Purchases/Create
@@ -59,7 +86,7 @@ namespace Shop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ItemId,Count,Price,Status")] Purchase purchase)
+        public async Task<IActionResult> Create([Bind("Id,ItemId,Count,Price,Status,OwnerId")] Purchase purchase)
         {
             if (ModelState.IsValid)
             {

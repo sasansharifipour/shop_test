@@ -60,9 +60,7 @@
                     @Html.DisplayFor(modelItem => item.Category.FullTitle)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">جزئیات</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                    <a asp-controller="Purchases" asp-action="Create" asp-route-itemId="@item.Id">خرید</a>
                 </td>
             </tr>
         }

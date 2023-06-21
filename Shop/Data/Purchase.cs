@@ -20,7 +20,7 @@ namespace Shop.Data
 
         public IdentityUser Owner { get; set; }
 
-        public virtual string Title { get { return Item.Title; } }
+        public virtual string Title { get { return Item == null? "" : Item.Title; } }
 
         [Display(Name = "تعداد")]
         [Range(1, double.MaxValue, ErrorMessage = "حداقل تعداد باید بزرگتر از صفر باشد")]
